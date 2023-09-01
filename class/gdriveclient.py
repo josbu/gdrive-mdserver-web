@@ -329,7 +329,7 @@ class gdriveclient():
             for item in items:
                 return item["id"]
 
-    def get_list(self, path=''):
+    def get_list(self, floder_name=''):
         service = build('drive', 'v3', credentials=self.__creds)
         results = service.files().list(pageSize=10, q="name='{}' and mimeType='application/vnd.google-apps.folder'".format(floder_name),
                                        fields="nextPageToken, files(id, name)").execute()
