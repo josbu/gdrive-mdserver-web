@@ -329,6 +329,13 @@ class gdriveclient():
             for item in items:
                 return item["id"]
 
+    def get_list(self, path=''):
+        service = build('drive', 'v3', credentials=self.__creds)
+        results = service.files().list(pageSize=10, q="name='{}' and mimeType='application/vnd.google-apps.folder'".format(floder_name),
+                                       fields="nextPageToken, files(id, name)").execute()
+        items = results.get('files', [])
+        print(items)
+
     # 创建目录
     def create_folder(self, folder_name, parents=""):
         self.D(self.__creds)

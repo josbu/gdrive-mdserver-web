@@ -87,11 +87,11 @@ gd.setDebug(True)
 # token = msodc.get_token()
 # print("token:", token)
 
-# t = msodc.get_list('/backup')
-# print(t)
-
-t = gd.create_folder('backup_demo')
+t = gd.get_list('/backup')
 print(t)
+
+# t = gd.create_folder('backup_demo')
+# print(t)
 
 # t = msodc.delete_object('backup')
 # print(t)
