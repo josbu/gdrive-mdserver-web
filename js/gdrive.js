@@ -1,5 +1,5 @@
 
-function msodPost(method,args,callback){
+function gdPost(method,args,callback){
     var _args = null; 
     if (typeof(args) == 'string'){
         _args = JSON.stringify(toArrayObject(args));
@@ -8,7 +8,7 @@ function msodPost(method,args,callback){
     }
 
     var loadT = layer.msg('正在获取...', { icon: 16, time: 0, shade: 0.3 });
-    $.post('/plugins/run', {name:'msonedrive', func:method, args:_args}, function(data) {
+    $.post('/plugins/run', {name:'gdrive', func:method, args:_args}, function(data) {
         layer.close(loadT);
         if (!data.status){
             layer.msg(data.msg,{icon:0,time:2000,shade: [0.3, '#000']});
@@ -71,7 +71,7 @@ function createDir(){
 //设置API
 function authApi(){
 
-    msodPost('conf', {}, function(rdata){
+    gdPost('conf', {}, function(rdata){
         var rdata = $.parseJSON(rdata.data);
 
         // console.log(rdata);
@@ -89,7 +89,7 @@ function authApi(){
 		        content:'<div class="change-default pd20">'+html+'</div>',
 		        success: function(){
 		        	$('#clear_auth').click(function(){
-		        		msodPost('clear_auth', {}, function(rdata){
+		        		gdPost('clear_auth', {}, function(rdata){
 							var rdata = $.parseJSON(rdata.data);
 							showMsg(rdata.msg,function(){
 								layer.close(loadOpen);
@@ -131,7 +131,7 @@ function authApi(){
 							return;
 						}
 						// console.log(url);
-						msodPost('set_auth_url', {url:url}, function(rdata){
+						gdPost('set_auth_url', {url:url}, function(rdata){
 							var rdata = $.parseJSON(rdata.data);
 							var show_time = 2000;
 							if (!rdata.status){
@@ -169,7 +169,7 @@ function upPathLeft(){
 }
 
 function odList(path){
-    msodPost('get_list', {path:path}, function(rdata){
+    gdPost('get_list', {path:path}, function(rdata){
         var rdata = $.parseJSON(rdata.data);
         if(rdata.status === false){
             showMsg(rdata.msg,function(){
@@ -237,7 +237,7 @@ function deleteFile(name, is_dir){
         safeMessage('删除文件','删除后将无法恢复，真的要删除['+name+']吗?',function(){
             var path = $("#myPath").val();
             var filename = name;
-            msodPost('delete_file', {filename:filename,path:path}, function(rdata){
+            gdPost('delete_file', {filename:filename,path:path}, function(rdata){
                 var rdata = $.parseJSON(rdata.data);
                 showMsg(rdata.msg,function(){
                     odList(path);
@@ -247,7 +247,7 @@ function deleteFile(name, is_dir){
     } else {
         safeMessage('删除文件夹','删除后将无法恢复，真的要删除['+name+']吗?',function(){
             var path = $("#myPath").val();
-            msodPost('delete_dir', {dir_name:name,path:path}, function(rdata){
+            gdPost('delete_dir', {dir_name:name,path:path}, function(rdata){
                 var rdata = $.parseJSON(rdata.data);
                 showMsg(rdata.msg,function(){
                     odList(path);
