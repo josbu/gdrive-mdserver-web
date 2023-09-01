@@ -108,7 +108,7 @@ function authApi(){
         var layer_auth = layer.open({
             type: 1,
             area: "620px",
-            title: "OneDrive授权",
+            title: "Google Drive 授权",
             closeBtn: 1,
             shift: 5,
             shadeClose: false,
@@ -125,7 +125,7 @@ function authApi(){
 
             		$('.check_api .set_auth_btn').click(function(){
 
-            			var url = $('.check_api .OneDrive').val();
+            			var url = $('.check_api .google_drive').val();
 						if ( url == ''){
 							layer.msg("验证URL不能为空",{icon:2});
 							return;

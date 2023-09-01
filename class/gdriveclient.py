@@ -53,6 +53,9 @@ class gdriveclient():
         # self.set_creds()
         # self.get_exclode()
 
+    def setDebug(self, d=False):
+        DEBUG = d
+
     # 检查gdrive连接
     def _check_connect(self):
         try:
@@ -82,7 +85,7 @@ class gdriveclient():
             else:
                 return True
 
-    def create_auth_url(self):
+    def get_sign_in_url(self):
         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
             self.__plugin_dir + '/credentials.json',
             scopes=self.__scpos)
@@ -91,7 +94,7 @@ class gdriveclient():
             access_type='offline',
             prompt='consent',
             include_granted_scopes='false')
-        return auth_url
+        return auth_url, state
 
     def set_auth_url(self, url):
         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(

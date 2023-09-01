@@ -52,11 +52,11 @@ def in_array(name, arr=[]):
 
 
 sys.path.append(getPluginDir() + "/class")
-from msodclient import msodclient
+from gdriveclient import gdriveclient
 
 
-msodc = msodclient(getPluginDir(), getServerDir())
-msodc.setDebug(False)
+gd = gdriveclient(getPluginDir(), getServerDir())
+gd.setDebug(False)
 
 
 def getArgs():
@@ -98,7 +98,7 @@ def isAuthApi():
 
 def getConf():
     if not isAuthApi():
-        sign_in_url, state = msodc.get_sign_in_url()
+        sign_in_url, state = gd.get_sign_in_url()
         return mw.returnJson(False, "未授权!", {'auth_url': sign_in_url})
     return mw.returnJson(True, "OK")
 
@@ -114,9 +114,9 @@ def setAuthUrl():
     try:
         if url.startswith("http://"):
             url = url.replace("http://", "https://")
-        token = msodc.get_token_from_authorized_url(authorized_url=url)
-        msodc.store_token(token)
-        msodc.store_user()
+        token = gd.get_token_from_authorized_url(authorized_url=url)
+        gd.store_token(token)
+        gd.store_user()
         return mw.returnJson(True, "授权成功!")
     except Exception as e:
         return mw.returnJson(False, "授权失败2!:" + str(e))
@@ -146,7 +146,7 @@ def getList():
         return data[1]
 
     try:
-        flist = msodc.get_list(args['path'])
+        flist = gd.get_list(args['path'])
         return mw.returnJson(True, "ok", flist)
     except Exception as e:
         return mw.returnJson(False, str(e), [])
@@ -163,7 +163,7 @@ def createDir():
         return data[1]
 
     file = args['path'] + "/" + args['name']
-    isok = msodc.create_dir(file)
+    isok = gd.create_dir(file)
     if isok:
         return mw.returnJson(True, "创建成功")
     return mw.returnJson(False, "创建失败")
@@ -177,7 +177,7 @@ def deleteDir():
 
     file = args['path'] + "/" + args['dir_name']
     file = file.strip('/')
-    isok = msodc.delete_object(file)
+    isok = gd.delete_object(file)
     if isok:
         return mw.returnJson(True, "删除成功")
     return mw.returnJson(False, "文件不为空,删除失败!")
@@ -191,7 +191,7 @@ def deleteFile():
 
     file = args['path'] + "/" + args['filename']
     file = file.strip('/')
-    isok = msodc.delete_object(file)
+    isok = gd.delete_object(file)
     if isok:
         return mw.returnJson(True, "删除成功")
     return mw.returnJson(False, "删除失败")
