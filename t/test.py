@@ -52,18 +52,19 @@ def getServerDir():
     return mw.getServerDir() + '/' + getPluginName()
 
 
-print(getPluginDir())
+# print(getPluginDir())
 sys.path.append(getPluginDir() + "/class")
 from gdriveclient import gdriveclient
 
 
 gd = gdriveclient(getPluginDir(), getServerDir())
-
-# sign_in_url = gd.create_auth_url()
+gd.setDebug(True)
+# sign_in_url, state = gd.get_sign_in_url()
 # print(sign_in_url)
 
-url = 'https://localhost/?state=D4nfzEM5dFRtK5bfDlcQnbbbDejuCc&code=4/0Adeu5BVLwdgE4B_xfshK0FGeFTuj08P3M3AFlF1iBv6vvbUDdm_gczCGDvxh5sD55omULQ&scope=https://www.googleapis.com/auth/drive.file'
-gd.set_auth_url(url)
+# url = 'https://localhost/?state=GH2YZ1VeytzVB1BqJJpQZIBk2GGAub&code=4/0Adeu5BXnD2dQvXx8Sg0WPn1XiMpihcRBNaG1yaFKIo86gUiG7q65KU1MaNCxrj_f2bjkwQ&scope=https://www.googleapis.com/auth/drive.file'
+# t = gd.set_auth_url(url)
+# print(t)
 
 # def set_auth_url(url):
 #     try:
@@ -89,16 +90,16 @@ gd.set_auth_url(url)
 # t = msodc.get_list('/backup')
 # print(t)
 
-# t = msodc.create_dir('backup')
-# print(t)
+t = gd.create_folder('backup_demo')
+print(t)
 
 # t = msodc.delete_object('backup')
 # print(t)
 
 
-# t = msodc.upload_file('web_t1.cn_20230830_134549.tar.gz', 'site')
+# t = gd.upload_file('web_t1.cn_20230830_134549.tar.gz', 'site')
 # print(t)
-# print(msodc.error_msg)
+# print(gd.error_msg)
 
 # /Users/midoks/Desktop/mwdev/server/mdserver-web/paramiko.log
 # backup/site/paramiko.log

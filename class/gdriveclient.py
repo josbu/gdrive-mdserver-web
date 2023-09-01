@@ -25,14 +25,15 @@ from googleapiclient.http import MediaIoBaseDownload
 class gdriveclient():
     __plugin_dir = ''
     __server_dir = ''
+
     __credentials = "/root/credentials.json"
-    __setup_path = "/www/server/panel/plugin/gdrive"
     __backup_dir_name = "backup"
     __creds = None
     __exclude = ""
     __scpos = ['https://www.googleapis.com/auth/drive.file']
     _title = 'Google Drive'
     _name = 'Google Drive'
+    __debug = False
 
     _DEFAULT_AUTH_PROMPT_MESSAGE = (
         'Please visit this URL to authorize this application: {url}')
@@ -49,12 +50,17 @@ class gdriveclient():
     def __init__(self, plugin_dir, server_dir):
         self.__plugin_dir = plugin_dir
         self.__server_dir = server_dir
+        self.set_creds()
         # self.set_libList()
-        # self.set_creds()
+
         # self.get_exclode()
 
     def setDebug(self, d=False):
-        DEBUG = d
+        self.__debug = d
+
+    def D(self, msg=''):
+        if self.__debug:
+            print(msg)
 
     # 检查gdrive连接
     def _check_connect(self):
@@ -69,8 +75,9 @@ class gdriveclient():
 
     # 设置creds
     def set_creds(self):
-        if os.path.exists(self.__server_dir + '/token.json'):
-            with open(self.__server_dir + '/token.json', 'rb') as token:
+        token_file = self.__server_dir + '/token.json'
+        if os.path.exists(token_file):
+            with open(token_file, 'rb') as token:
                 tmp_data = json.load(token)['credentials']
                 self.__creds = google.oauth2.credentials.Credentials(
                     tmp_data['token'],
@@ -80,10 +87,10 @@ class gdriveclient():
                     tmp_data['client_id'],
                     tmp_data['client_secret'],
                     tmp_data['scopes'])
-            if not self._check_connect():
-                return False
-            else:
-                return True
+            # if not self._check_connect():
+            #     return False
+            # else:
+            #     return True
 
     def get_sign_in_url(self):
         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
@@ -97,6 +104,10 @@ class gdriveclient():
         return auth_url, state
 
     def set_auth_url(self, url):
+        token_file = self.__server_dir + '/token.json'
+        if os.path.exists(token_file):
+            return mw.returnJson(True, "验证成功")
+
         flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
             self.__plugin_dir + '/credentials.json',
             scopes=self.__scpos,
@@ -114,7 +125,7 @@ class gdriveclient():
             'client_id': credentials.client_id,
             'client_secret': credentials.client_secret,
             'scopes': credentials.scopes}
-        with open(self.__server_dir + '/token.json', 'w') as token:
+        with open(token_file, 'w') as token:
             json.dump(credentials_data, token)
         if not self.set_creds():
             return mw.returnJson(False, "验证失败，请根据页面1 2 3 步骤完成验证")
@@ -171,75 +182,44 @@ class gdriveclient():
 
     # 获取token
     def get_token(self, get):
+        token_file = self.__server_dir + '/token.json'
         import requests
         try:
             respone = requests.get("https://www.google.com", timeout=2)
         except:
-            return public.returnMsg(False, "连接谷歌失败")
+            return mw.returnJson(False, "连接谷歌失败")
         if respone.status_code != 200:
-            return public.returnMsg(False, "连接谷歌失败")
+            return mw.returnJson(False, "连接谷歌失败")
         if not self.set_creds():
-            return public.returnMsg(False, "验证失败，请根据页面1 2 3 步骤完成验证")
-        if not os.path.exists(self.__setup_path + '/token.json'):
-            # if not os.path.exists('/root/gdrive_token.json'):
-            return public.returnMsg(False, "验证失败，请根据页面1 2 3 步骤完成验证")
-        return public.returnMsg(True, "验证成功")
-
-    # 导出配置
-    def export_conf(self, get):
-        file_name = "{}/token.json".format(self.__setup_path)
-        if not os.path.exists(file_name):
-            return public.returnMsg(False, '没有找到文件')
-        return public.returnMsg(True, file_name)
-
-    # 导入数据
-    def import_data(self, get):
-        """
-        重构版弃用此方法
-        """
-        import files
-
-        f = files.files()
-        get.f_path = self.__setup_path
-        result = f.upload(get)
-        print(get)
-        # for key,value in get:
-        #     tmp_one = "echo "+key+" >> /testdata"
-        #     tmp_two = "echo "+value+" >> /testdata"
-        #     tmp_three = "echo \n"++" >> /testdata"
-        #     public.ExecShell(tmp_one)
-        #     public.ExecShell(tmp_two)
-        #     public.ExecShell(tmp_three)
-        # tmp_aa = "echo "+a+">/testdata"
-        # publ= self.__setup_path+str(get)
-        # a = getic.ExecShell(tmp_aa)
-        # tmp_exec =  "mv "+tmp_name+" "+self.__setup_path+"client_secret.json"
-        # public.ExecShell(tmp_exec)
-        return result
+            return mw.returnJson(False, "验证失败，请根据页面1 2 3 步骤完成验证")
+        if not os.path.exists(token_file):
+            return mw.returnJson(False, "验证失败，请根据页面1 2 3 步骤完成验证")
+        return mw.returnJson(True, "验证成功")
 
     # 获取auth_url
     def get_auth_url(self, get):
-        self.create_auth_url()
+        self.get_sign_in_url()
         if os.path.exists("/tmp/auth_url"):
-            return public.readFile("/tmp/auth_url")
+            return mw.readFile("/tmp/auth_url")
 
     # 检查连接
     def check_connect(self, get):
-        if os.path.exists(self.__setup_path + '/token.json'):
-            with open(self.__setup_path + '/token.json', 'rb') as token:
+        token_file = self.__server_dir + '/token.json'
+        if os.path.exists(token_file):
+            with open(token_file, 'rb') as token:
                 self.set_creds()
         else:
-            print("Failed to get Google token, please verify before use")
-            return public.returnMsg(True, "Failed to get Google token, please verify before use")
+            self.D("Failed to get Google token, please verify before use")
+            return mw.returnJson(True, "Failed to get Google token, please verify before use")
         service = build('drive', 'v3', credentials=self.__creds)
         results = service.files().list(
             pageSize=10, fields="nextPageToken, files(id, name)").execute()
         try:
             results.get('files', [])
-            return public.returnMsg(False, "验证失败，请根据页面1 2 3 步骤完成验证")
-            return public.returnMsg(True, "验证成功")
+            return mw.returnJson(False, "验证失败，请根据页面1 2 3 步骤完成验证")
+            return mw.returnJson(True, "验证成功")
         except:
-            return public.returnMsg(False, "验证失败，请根据页面1 2 3 步骤完成验证")
+            return mw.returnJson(False, "验证失败，请根据页面1 2 3 步骤完成验证")
 
     def _get_filename(self, filename):
         l = filename.split("/")
@@ -281,14 +261,15 @@ class gdriveclient():
             sub_path_name = sub_search.groups()[0]
             sub_path_name += '/'
         # 构建OS存储路径
-        object_name = 'bt_backup/{}/{}'.format(data_type, sub_path_name)
+        object_name = self.__backup_dir_name + \
+            '/{}/{}'.format(data_type, sub_path_name)
 
         if object_name[:1] == "/":
             object_name = object_name[1:]
         return object_name
 
     # 上传文件
-    def upload_file(self, get=None, data_type=None):
+    def upload_file(self, filename, data_type=None):
         """
         get.filename 上传后的文件名
         get.filepath 上传文件路径
@@ -297,20 +278,20 @@ class gdriveclient():
         :param get:
         :return:
         """
-        if isinstance(get, str):
-            filename = get
-            get = getObject
-            get.filepath = self.build_object_name(data_type, filename)
-            get.path = ''
-            get.filename = filename
-        filename = self._get_filename(get.filename)
-        parents = self._create_folder_cycle(get.filepath)
-        drive_service = build('drive', 'v3', credentials=self.__creds)
-        file_metadata = {'name': filename, 'parents': [parents]}
-        media = MediaFileUpload(get.filename, resumable=True)
-        file = drive_service.files().create(
-            body=file_metadata, media_body=media, fields='id').execute()
-        print('Upload Success ,File ID: %s' % file.get('id'))
+        # filename = filename
+        filepath = self.build_object_name(data_type, filename)
+        filename = self._get_filename(filename)
+        print(filepath)
+        print(filename)
+
+        parents = self._create_folder_cycle(filepath)
+        print(parents)
+        # drive_service = build('drive', 'v3', credentials=self.__creds)
+        # file_metadata = {'name': filename, 'parents': [parents]}
+        # media = MediaFileUpload(filename, resumable=True)
+        # file = drive_service.files().create(
+        #     body=file_metadata, media_body=media, fields='id').execute()
+        # print('Upload Success ,File ID: %s' % file.get('id'))
         return True
 
     def _get_file_id(self, filename):
@@ -350,7 +331,8 @@ class gdriveclient():
 
     # 创建目录
     def create_folder(self, folder_name, parents=""):
-        print("folder_name: {}\nparents: {}".format(folder_name, parents))
+        self.D(self.__creds)
+        self.D("folder_name: {}\nparents: {}".format(folder_name, parents))
         service = build('drive', 'v3', credentials=self.__creds)
         file_metadata = {
             'name': folder_name,
@@ -359,7 +341,7 @@ class gdriveclient():
         if parents:
             file_metadata['parents'] = [parents]
         folder = service.files().create(body=file_metadata, fields='id').execute()
-        print('Create Folder ID: %s' % folder.get('id'))
+        self.D('Create Folder ID: %s' % folder.get('id'))
         return folder.get('id')
 
     # 获取数据库编码
