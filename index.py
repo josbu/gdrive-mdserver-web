@@ -90,7 +90,7 @@ def status():
 
 
 def isAuthApi():
-    cfg = getServerDir() + "/user.conf"
+    cfg = getServerDir() + "/token.json"
     if os.path.exists(cfg):
         return True
     return False
@@ -114,9 +114,9 @@ def setAuthUrl():
     try:
         if url.startswith("http://"):
             url = url.replace("http://", "https://")
-        token = gd.get_token_from_authorized_url(authorized_url=url)
-        gd.store_token(token)
-        gd.store_user()
+        token = gd.set_auth_url(url)
+        # gd.store_token(token)
+        # gd.store_user()
         return mw.returnJson(True, "授权成功!")
     except Exception as e:
         return mw.returnJson(False, "授权失败2!:" + str(e))
