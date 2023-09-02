@@ -170,9 +170,7 @@ def deleteDir():
     if not data[0]:
         return data[1]
 
-    file = args['path'] + "/" + args['dir_name']
-    file = file.strip('/')
-    isok = gd.delete_object(file)
+    isok = gd.delete_file(args['dir_name'])
     if isok:
         return mw.returnJson(True, "删除成功")
     return mw.returnJson(False, "文件不为空,删除失败!")
