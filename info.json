@@ -1,4 +1,5 @@
 {
+	"hook":["backup"],
 	"id":998,
 	"title":"谷歌云网盘",
 	"tip":"lib",
