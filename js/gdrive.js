@@ -192,7 +192,7 @@ function gdList(file_id){
                 listFiles += '<tr><td class="cursor" onclick="gdList(\''+(mlist[i].id).replace('//','/')+'\')"><span class="ico ico-folder"></span>\<span>'+mlist[i].name+'</span></td>\
                 <td>-</td>\
                 <td>-</td>\
-                <td class="text-right"><a class="btlink" onclick="deleteFile(\''+mlist[i].id+'\', true)">删除</a></td></tr>'
+                <td class="text-right"><a class="btlink" onclick="deleteFile(\''+mlist[i].name+'\', true)">删除</a></td></tr>'
             }else{
                 listFiles += '<tr><td class="cursor"><span class="ico ico-file"></span><span>'+mlist[i].name+'</span></td>\
                 <td>'+toSize(mlist[i].size)+'</td>\
