@@ -307,15 +307,17 @@ class gdriveclient():
 
     def delete_file(self, filename=None, data_type=None):
         file_id = self._get_file_id(filename)
-        self._delete_file(file_id)
+        self.delete_file_by_id(file_id)
+        return True
 
-    def _delete_file(self, file_id):
+    def delete_file_by_id(self, file_id):
+        self.D("delete id:{}".format(file_id))
         try:
             drive_service = build('drive', 'v3', credentials=self.__creds)
             drive_service.files().delete(fileId=file_id).execute()
-        except:
-            pass
-        print("delete ok")
+            return True
+        except Exception as e:
+            return False
 
     # 创建目录
     def create_folder(self, folder_name, parents=""):
