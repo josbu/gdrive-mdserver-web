@@ -20,11 +20,10 @@
 # http://localhost/?code=M.C106_BAY.2.3e12c859-6107-0c5b-9ef4-14b3fb8269ba&state=JzHdzHXmA7x6zl7Be6cJ6uOlf9Bg69
 
 
-# python3 /Users/midoks/Desktop/mwdev/server/mdserver-web/plugins/msonedrive/index.py site t1.cn 3
-# python3 /Users/midoks/Desktop/mwdev/server/mdserver-web/plugins/msonedrive/index.py database t1 3
-# python3
-# /Users/midoks/Desktop/mwdev/server/mdserver-web/plugins/msonedrive/index.py
-# path /Users/midoks/Desktop/dev/python 3
+# python3 /www/mdserver-web/plugins/gdrive/index.py site zzzvps.com 3
+# python3 /www/mdserver-web/plugins/gdrive/index.py database t1 3
+# python3 /www/server/mdserver-web/plugins/msonedrive/index.py path
+# /Users/midoks/Desktop/dev/python 3
 
 
 import sys
@@ -86,11 +85,11 @@ gd.setDebug(True)
 # token = msodc.get_token()
 # print("token:", token)
 
-t = gd.get_list('')
-print(t)
+# t = gd.get_list('')
+# print(t)
 
-t = gd.get_id_list('1u7LjXGj1KoN-ltAdTRaib7IZJpsEnPdz')
-print(t)
+# t = gd.get_id_list('1u7LjXGj1KoN-ltAdTRaib7IZJpsEnPdz')
+# print(t)
 
 # t = gd.create_folder('backup_demo')
 # print(t)
@@ -109,7 +108,6 @@ print(t)
 # True
 
 
-# t = msodc.upload_abs_file(
-#     'web_t1.cn_20230830_134549.tar.gz', 'site')
-# print(t)
-# print(msodc.error_msg)
+t = gd.upload_file(
+    'db_zzzvps_20230830_210727.sql.gz', 'datebase')
+print(t)

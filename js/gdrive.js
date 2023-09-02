@@ -246,7 +246,7 @@ function deleteFile(name, is_dir){
             });
         });
     } else {
-        safeMessage('删除文件夹','删除后将无法恢复，真的要删除['+name+']吗?',function(){
+        safeMessage('删除文件夹','删除后将无法恢复，真的要删除文件资源['+name+']吗?',function(){
             var path = $("#myPath").val();
             gdPost('delete_dir', {dir_name:name,path:path}, function(rdata){
                 var rdata = $.parseJSON(rdata.data);

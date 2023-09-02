@@ -254,6 +254,11 @@ class gdriveclient():
             "database": "db",
             "path": "path",
         }
+
+        if not prefix_dict.get(data_type):
+            print("data_type 类型错误!!!")
+            exit(1)
+
         file_regx = prefix_dict.get(data_type) + "_(.+)_20\d+_\d+\."
         sub_search = re.search(file_regx.lower(), file_name)
         sub_path_name = ""
@@ -280,18 +285,18 @@ class gdriveclient():
         """
         # filename = filename
         filepath = self.build_object_name(data_type, filename)
-        filename = self._get_filename(filename)
-        print(filepath)
-        print(filename)
+        _filename = self._get_filename(filename)
+        self.D(filepath)
+        self.D(filename)
 
         parents = self._create_folder_cycle(filepath)
-        print(parents)
-        # drive_service = build('drive', 'v3', credentials=self.__creds)
-        # file_metadata = {'name': filename, 'parents': [parents]}
-        # media = MediaFileUpload(filename, resumable=True)
-        # file = drive_service.files().create(
-        #     body=file_metadata, media_body=media, fields='id').execute()
-        # self.D('Upload Success ,File ID: %s' % file.get('id'))
+        self.D(parents)
+        drive_service = build('drive', 'v3', credentials=self.__creds)
+        file_metadata = {'name': _filename, 'parents': [parents]}
+        media = MediaFileUpload(filename, resumable=True)
+        file = drive_service.files().create(
+            body=file_metadata, media_body=media, fields='id').execute()
+        self.D('Upload Success ,File ID: %s' % file.get('id'))
         return True
 
     def _get_file_id(self, filename):
@@ -358,13 +363,6 @@ class gdriveclient():
             for item in items:
                 return item["id"]
 
-    def get_list_tmp(self, floder_name=''):
-        service = build('drive', 'v3', credentials=self.__creds)
-        results = service.files().list(pageSize=10, q="trashed=false and '1-z6gUXseXmlxmntvkLzOe_tYFT5tdhM9' in parents", orderBy='folder asc',
-                                       fields="nextPageToken, files(id, name,size,parents,webViewLink)").execute()
-        items = results.get('files', [])
-        print(items)
-
     def get_res_info(self, rid):
         service = build('drive', 'v3', credentials=self.__creds)
         results = service.files().get(fileId='{}'.format(rid)).execute()
@@ -375,7 +373,7 @@ class gdriveclient():
         results = service.files().list(pageSize=10, driveId="{}".format(driveId),
                                        fields="nextPageToken, files(id, name,size,parents)").execute()
         items = results.get('files', [])
-        print(items)
+        return items
 
     def get_list(self, dir_id='', next_page_token=''):
         if dir_id == '':
