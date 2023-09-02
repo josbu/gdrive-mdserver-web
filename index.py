@@ -187,9 +187,7 @@ def deleteFile():
     if not data[0]:
         return data[1]
 
-    file = args['path'] + "/" + args['filename']
-    file = file.strip('/')
-    isok = gd.delete_object(file)
+    isok = gd.delete_file(args['filename'])
     if isok:
         return mw.returnJson(True, "删除成功")
     return mw.returnJson(False, "删除失败")
