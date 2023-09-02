@@ -57,7 +57,8 @@ function createDir(){
                 if(rdata.status) {
                     showMsg(rdata.msg, function(){
                         layer.close(index);
-                        gdList(path);
+                        var file_id = $('#myPath').val();
+                        gdList(file_id);
                     } ,{icon:1}, 2000);
                 } else{
                     layer.msg(rdata.msg,{icon:2});
