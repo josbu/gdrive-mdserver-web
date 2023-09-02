@@ -140,12 +140,12 @@ def getList():
         return mw.returnJson(False, "未配置,请点击`授权`", [])
 
     args = getArgs()
-    data = checkArgs(args, ['path'])
+    data = checkArgs(args, ['file_id'])
     if not data[0]:
         return data[1]
 
     try:
-        flist = gd.get_list(args['path'])
+        flist = gd.get_list(args['file_id'])
         return mw.returnJson(True, "ok", flist)
     except Exception as e:
         return mw.returnJson(False, str(e), [])

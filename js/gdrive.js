@@ -168,8 +168,8 @@ function upPathLeft(){
     }
 }
 
-function odList(path){
-    gdPost('get_list', {path:path}, function(rdata){
+function gdList(file_id){
+    gdPost('get_list', {file_id:file_id}, function(rdata){
         var rdata = $.parseJSON(rdata.data);
         console.log(rdata);
         if(rdata.status === false){
@@ -184,7 +184,7 @@ function odList(path){
         var listFiles = ''
         for(var i=0;i<mlist.length;i++){
             if(mlist[i].size == null){
-                listBody += '<tr><td class="cursor" onclick="odList(\''+(mlist[i].id).replace('//','/')+'\')"><span class="ico ico-folder"></span>\<span>'+mlist[i].name+'</span></td>\
+                listBody += '<tr><td class="cursor" onclick="gdList(\''+(mlist[i].id).replace('//','/')+'\')"><span class="ico ico-folder"></span>\<span>'+mlist[i].name+'</span></td>\
                 <td>-</td>\
                 <td>-</td>\
                 <td class="text-right"><a class="btlink" onclick="deleteFile(\''+mlist[i].id+'\', true)">删除</a></td></tr>'
@@ -196,37 +196,21 @@ function odList(path){
             }
         }
         listBody += listFiles;
-
-        var pathLi='';
-        var tmp = path.split('/')
-        var pathname = '';
-        var n = 0;
-        for(var i=0;i<tmp.length;i++){
-            if(n > 0 && tmp[i] == '') continue;
-            var dirname = tmp[i];
-            if(dirname == '') {
-                dirname = '根目录';
-                n++;
-            }
-            pathname += '/' + tmp[i];
-            pathname = pathname.replace('//','/');
-            pathLi += '<li><a title="'+pathname+'" onclick="osList(\''+pathname+'\')">'+dirname+'</a></li>';
+        var pathLi += '<li><a title="根目录" onclick="gdList()">根目录</a></li>';
+        
+        if (mlist.length>0){
+            $('#myPath').val(mlist[0]['parents'][0]);
         }
-        var um = 1;
-        if(tmp[tmp.length-1] == '') um = 2;
-        var backPath = tmp.slice(0,tmp.length-um).join('/') || '/';
-        $('#myPath').val(path);
+        
         $(".upyunCon .place-input ul").html(pathLi);
         $(".upyunlist .list-list").html(listBody);
 
-        upPathLeft();
-
         $('#backBtn').unbind().click(function() {
-            odList(backPath);
+            gdList('');
         });
 
         $('.upyunCon .refreshBtn').unbind().click(function(){
-            odList(path);
+            gdList(path);
         });
     });
 }
