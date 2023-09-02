@@ -225,7 +225,7 @@ function deleteFile(name, is_dir){
             gdPost('delete_file', {filename:filename,path:path}, function(rdata){
                 var rdata = $.parseJSON(rdata.data);
                 showMsg(rdata.msg,function(){
-                    odList(path);
+                    gdList(path);
                 },{icon:rdata.status?1:2},2000);
             });
         });
@@ -235,7 +235,7 @@ function deleteFile(name, is_dir){
             gdPost('delete_dir', {dir_name:name,path:path}, function(rdata){
                 var rdata = $.parseJSON(rdata.data);
                 showMsg(rdata.msg,function(){
-                    odList(path);
+                    gdList(path);
                 },{icon:rdata.status?1:2},2000);
             });
         });
