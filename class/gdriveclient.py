@@ -291,7 +291,7 @@ class gdriveclient():
         # media = MediaFileUpload(filename, resumable=True)
         # file = drive_service.files().create(
         #     body=file_metadata, media_body=media, fields='id').execute()
-        # print('Upload Success ,File ID: %s' % file.get('id'))
+        # self.D('Upload Success ,File ID: %s' % file.get('id'))
         return True
 
     def _get_file_id(self, filename):

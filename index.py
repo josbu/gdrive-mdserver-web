@@ -151,17 +151,14 @@ def getList():
 
 
 def createDir():
-    cfg = getServerDir() + "/user.conf"
-    if not os.path.exists(cfg):
-        return mw.returnJson(False, "未配置OneDrive,请点击`授权`", [])
+    if not isAuthApi():
+        return mw.returnJson(False, "未配置,请点击`授权`", [])
 
     args = getArgs()
-    data = checkArgs(args, ['path', 'name'])
+    data = checkArgs(args, ['parents', 'name'])
     if not data[0]:
         return data[1]
-
-    file = args['path'] + "/" + args['name']
-    isok = gd.create_dir(file)
+    isok = gd.create_folder(args['name'], parents)
     if isok:
         return mw.returnJson(True, "创建成功")
     return mw.returnJson(False, "创建失败")
@@ -289,7 +286,7 @@ def backupAllFunc(stype):
 
     mw.echoInfo("准备上传文件 {}".format(filename))
     mw.echoStart('开始上传')
-    msodc.upload_file(filename, stype)
+    gd.upload_file(filename, stype)
     mw.echoEnd('上传成功')
 
     # print(backups)

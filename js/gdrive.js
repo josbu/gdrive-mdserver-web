@@ -48,10 +48,10 @@ function createDir(){
                 layer.msg('目录名称不能为空!',{icon:2});
                 return;
             }
-            var path = $("#myPath").val();
+            var parents = $("#myPath").val();
             var dirname = name;
             var loadT = layer.msg('正在创建目录['+dirname+']...',{icon:16,time:0,shade: [0.3, '#000']});
-            msodPost('create_dir', {path:path,name:dirname}, function(data){
+            gdPost('create_dir', {parents:parents,name:dirname}, function(data){
             	layer.close(loadT);
                 var rdata = $.parseJSON(data.data);
                 if(rdata.status) {
