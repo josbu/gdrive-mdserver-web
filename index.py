@@ -158,7 +158,7 @@ def createDir():
     data = checkArgs(args, ['parents', 'name'])
     if not data[0]:
         return data[1]
-    isok = gd.create_folder(args['name'], parents)
+    isok = gd.create_folder(args['name'], args['parents'])
     if isok:
         return mw.returnJson(True, "创建成功")
     return mw.returnJson(False, "创建失败")
