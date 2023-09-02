@@ -210,7 +210,8 @@ function gdList(file_id){
         });
 
         $('.upyunCon .refreshBtn').unbind().click(function(){
-            gdList(path);
+            var file_id = $('#myPath').val();
+            gdList(file_id);
         });
     });
 }
