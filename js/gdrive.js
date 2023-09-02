@@ -174,6 +174,7 @@ function getGDTime(a) {
 }
 
 function gdList(file_id){
+    $('#curPath').val(file_id);
     gdPost('get_list', {file_id:file_id}, function(rdata){
         var rdata = $.parseJSON(rdata.data);
         console.log(rdata);
