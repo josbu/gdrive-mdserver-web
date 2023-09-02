@@ -57,7 +57,7 @@ function createDir(){
                 if(rdata.status) {
                     showMsg(rdata.msg, function(){
                         layer.close(index);
-                        odList(path);
+                        gdList(path);
                     } ,{icon:1}, 2000);
                 } else{
                     layer.msg(rdata.msg,{icon:2});
@@ -93,7 +93,7 @@ function authApi(){
 							var rdata = $.parseJSON(rdata.data);
 							showMsg(rdata.msg,function(){
 								layer.close(loadOpen);
-					            odList('');
+					            gdList('');
 					        },{icon:rdata.status?1:2},2000);
 						});  
 		        	});	
@@ -141,7 +141,7 @@ function authApi(){
 							showMsg(rdata.msg,function(){
 								if (rdata.status){
 									layer.close(layer_auth);
-									odList('');
+									gdList('');
 								}
 					        },{icon:rdata.status?1:2},show_time);
 						});
@@ -180,11 +180,11 @@ function gdList(file_id){
         }
 
         var mlist = rdata.data;
-        var listBody = ''
-        var listFiles = ''
+        var listBody = '';
+        var listFiles = '';
         for(var i=0;i<mlist.length;i++){
             if(mlist[i].size == null){
-                listBody += '<tr><td class="cursor" onclick="gdList(\''+(mlist[i].id).replace('//','/')+'\')"><span class="ico ico-folder"></span>\<span>'+mlist[i].name+'</span></td>\
+                listFiles += '<tr><td class="cursor" onclick="gdList(\''+(mlist[i].id).replace('//','/')+'\')"><span class="ico ico-folder"></span>\<span>'+mlist[i].name+'</span></td>\
                 <td>-</td>\
                 <td>-</td>\
                 <td class="text-right"><a class="btlink" onclick="deleteFile(\''+mlist[i].id+'\', true)">删除</a></td></tr>'
@@ -196,7 +196,7 @@ function gdList(file_id){
             }
         }
         listBody += listFiles;
-        var pathLi += '<li><a title="根目录" onclick="gdList()">根目录</a></li>';
+        var pathLi = '<li><a title="根目录" onclick="gdList()">根目录</a></li>';
         
         if (mlist.length>0){
             $('#myPath').val(mlist[0]['parents'][0]);
