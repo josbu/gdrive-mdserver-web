@@ -200,7 +200,7 @@ function gdList(file_id){
             }
         }
         listBody += listFiles;
-        var pathLi = '<li><a title="根目录" onclick="gdList('')">根目录</a></li>';
+        var pathLi = '<li><a title="根目录" onclick="gdList(\'\')">根目录</a></li>';
         
         if (mlist.length>0){
             $('#myPath').val(mlist[0]['parents'][0]);
