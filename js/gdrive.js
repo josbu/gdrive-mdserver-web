@@ -93,7 +93,7 @@ function authApi(){
 							var rdata = $.parseJSON(rdata.data);
 							showMsg(rdata.msg,function(){
 								layer.close(loadOpen);
-					            odList('/');
+					            odList('');
 					        },{icon:rdata.status?1:2},2000);
 						});  
 		        	});	
@@ -141,7 +141,7 @@ function authApi(){
 							showMsg(rdata.msg,function(){
 								if (rdata.status){
 									layer.close(layer_auth);
-									odList('/');
+									odList('');
 								}
 					        },{icon:rdata.status?1:2},show_time);
 						});
