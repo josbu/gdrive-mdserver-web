@@ -382,7 +382,7 @@ class gdriveclient():
         service = build('drive', 'v3', credentials=self.__creds)
         cmd_query = "trashed=false and '{}' in parents".format(dir_id)
         results = service.files().list(pageSize=10, q=cmd_query, orderBy='folder asc',
-                                       fields="nextPageToken, files(id, name,size,parents,webViewLink)").execute()
+                                       fields="nextPageToken, files(id, name,size,createdTime,parents,webViewLink)").execute()
         items = results.get('files', [])
         nextPageToken = results.get('nextPageToken', [])
         # print(items)

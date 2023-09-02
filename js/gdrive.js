@@ -171,6 +171,7 @@ function upPathLeft(){
 function odList(path){
     gdPost('get_list', {path:path}, function(rdata){
         var rdata = $.parseJSON(rdata.data);
+        console.log(rdata);
         if(rdata.status === false){
             showMsg(rdata.msg,function(){
                 authApi();
@@ -181,17 +182,17 @@ function odList(path){
         var mlist = rdata.data;
         var listBody = ''
         var listFiles = ''
-        for(var i=0;i<mlist.list.length;i++){
-            if(mlist.list[i].type == null){
-                listBody += '<tr><td class="cursor" onclick="odList(\''+(path+'/'+mlist.list[i].name).replace('//','/')+'\')"><span class="ico ico-folder"></span>\<span>'+mlist.list[i].name+'</span></td>\
+        for(var i=0;i<mlist.length;i++){
+            if(mlist[i].size == null){
+                listBody += '<tr><td class="cursor" onclick="odList(\''+(mlist[i].id).replace('//','/')+'\')"><span class="ico ico-folder"></span>\<span>'+mlist[i].name+'</span></td>\
                 <td>-</td>\
                 <td>-</td>\
-                <td class="text-right"><a class="btlink" onclick="deleteFile(\''+mlist.list[i].name+'\', true)">删除</a></td></tr>'
+                <td class="text-right"><a class="btlink" onclick="deleteFile(\''+mlist[i].id+'\', true)">删除</a></td></tr>'
             }else{
-                listFiles += '<tr><td class="cursor"><span class="ico ico-file"></span>\<span>'+mlist.list[i].name+'</span></td>\
-                <td>'+toSize(mlist.list[i].size)+'</td>\
-                <td>'+getLocalTime(mlist.list[i].time)+'</td>\
-                <td class="text-right"><a target="_blank" href="'+mlist.list[i].download+'" class="btlink">下载</a> | <a class="btlink" onclick="deleteFile(\''+mlist.list[i].name+'\', false)">删除</a></td></tr>'
+                listFiles += '<tr><td class="cursor"><span class="ico ico-file"></span>\<span>'+mlist[i].id+'</span></td>\
+                <td>'+toSize(mlist[i].size)+'</td>\
+                <td>'+getLocalTime(mlist[i].time)+'</td>\
+                <td class="text-right"><a target="_blank" href="'+mlist[i].download+'" class="btlink">下载</a> | <a class="btlink" onclick="deleteFile(\''+mlist[i].name+'\', false)">删除</a></td></tr>'
             }
         }
         listBody += listFiles;
