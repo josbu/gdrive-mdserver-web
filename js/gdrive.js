@@ -49,6 +49,11 @@ function createDir(){
                 return;
             }
             var parents = $("#myPath").val();
+            var cur_file_id = $('#curPath').val();
+            if (cur_file_id!=''){
+                parents = cur_file_id;
+            }
+
             var dirname = name;
             var loadT = layer.msg('正在创建目录['+dirname+']...',{icon:16,time:0,shade: [0.3, '#000']});
             gdPost('create_dir', {parents:parents,name:dirname}, function(data){
@@ -58,6 +63,9 @@ function createDir(){
                     showMsg(rdata.msg, function(){
                         layer.close(index);
                         var file_id = $('#myPath').val();
+                        if (cur_file_id!=''){
+                            file_id = cur_file_id;
+                        }
                         gdList(file_id);
                     } ,{icon:1}, 2000);
                 } else{
