@@ -136,8 +136,7 @@ def clearAuth():
 
 
 def getList():
-    cfg = getServerDir() + "/user.conf"
-    if not os.path.exists(cfg):
+    if not isAuthApi():
         return mw.returnJson(False, "未配置,请点击`授权`", [])
 
     args = getArgs()

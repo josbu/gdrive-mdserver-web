@@ -317,37 +317,6 @@ class gdriveclient():
             pass
         print("delete ok")
 
-    # 获取目录id
-    def __get_folder_id(self, floder_name):
-        service = build('drive', 'v3', credentials=self.__creds)
-        results = service.files().list(pageSize=10, q="name='{}' and mimeType='application/vnd.google-apps.folder'".format(floder_name),
-                                       fields="nextPageToken, files(id, name)").execute()
-        items = results.get('files', [])
-        if not items:
-            return []
-        else:
-            for item in items:
-                return item["id"]
-
-    def get_res_info(self, rid):
-        service = build('drive', 'v3', credentials=self.__creds)
-        results = service.files().get(fileId='{}'.format(rid)).execute()
-        return results
-
-    def get_id_list(self, driveId=''):
-        service = build('drive', 'v3', credentials=self.__creds)
-        results = service.files().list(pageSize=10, driveId="{}".format(floder_name),
-                                       fields="nextPageToken, files(id, name,size,parents)").execute()
-        items = results.get('files', [])
-        print(items)
-
-    def get_list(self, floder_name=''):
-        service = build('drive', 'v3', credentials=self.__creds)
-        results = service.files().list(pageSize=10, q="name='{}' and mimeType='application/vnd.google-apps.folder'".format(floder_name),
-                                       fields="nextPageToken, files(id, name)").execute()
-        items = results.get('files', [])
-        print(items)
-
     # 创建目录
     def create_folder(self, folder_name, parents=""):
         self.D(self.__creds)
@@ -363,6 +332,62 @@ class gdriveclient():
         folder = service.files().create(body=file_metadata, fields='id').execute()
         self.D('Create Folder ID: %s' % folder.get('id'))
         return folder.get('id')
+
+    def get_rootdir_id(self, folder_name='backup'):
+        service = build('drive', 'v3', credentials=self.__creds)
+        results = service.files().list(pageSize=10, q="name='{}' and mimeType='application/vnd.google-apps.folder'".format(folder_name),
+                                       fields="nextPageToken, files(id, name,size,parents,webViewLink)").execute()
+        items = results.get('files', [])
+        if len(items) == 0:
+            self.create_folder(folder_name)
+            return self.get_rootdir_id(folder_name)
+
+        return items[0]['parents'][0]
+
+    # 获取目录id
+    def __get_folder_id(self, floder_name):
+        service = build('drive', 'v3', credentials=self.__creds)
+        results = service.files().list(pageSize=10, q="name='{}' and mimeType='application/vnd.google-apps.folder'".format(floder_name),
+                                       fields="nextPageToken, files(id, name)").execute()
+        items = results.get('files', [])
+        if not items:
+            return []
+        else:
+            for item in items:
+                return item["id"]
+
+    def get_list_tmp(self, floder_name=''):
+        service = build('drive', 'v3', credentials=self.__creds)
+        results = service.files().list(pageSize=10, q="trashed=false and '1-z6gUXseXmlxmntvkLzOe_tYFT5tdhM9' in parents", orderBy='folder asc',
+                                       fields="nextPageToken, files(id, name,size,parents,webViewLink)").execute()
+        items = results.get('files', [])
+        print(items)
+
+    def get_res_info(self, rid):
+        service = build('drive', 'v3', credentials=self.__creds)
+        results = service.files().get(fileId='{}'.format(rid)).execute()
+        return results
+
+    def get_id_list(self, driveId=''):
+        service = build('drive', 'v3', credentials=self.__creds)
+        results = service.files().list(pageSize=10, driveId="{}".format(driveId),
+                                       fields="nextPageToken, files(id, name,size,parents)").execute()
+        items = results.get('files', [])
+        print(items)
+
+    def get_list(self, dir_id='', next_page_token=''):
+        if dir_id == '':
+            dir_id = self.get_rootdir_id(self.__backup_dir_name)
+
+        service = build('drive', 'v3', credentials=self.__creds)
+        cmd_query = "trashed=false and '{}' in parents".format(dir_id)
+        results = service.files().list(pageSize=10, q=cmd_query, orderBy='folder asc',
+                                       fields="nextPageToken, files(id, name,size,parents,webViewLink)").execute()
+        items = results.get('files', [])
+        nextPageToken = results.get('nextPageToken', [])
+        # print(items)
+        # print(nextPageToken)
+        return items
 
     def get_exclode(self, exclude=[]):
         if not exclude:
