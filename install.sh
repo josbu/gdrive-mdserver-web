@@ -27,7 +27,7 @@ Install_App()
             tmp=$(pip list|grep google-api-python-client|awk '{print $2}')
             if [ "$tmp" != '2.39.0' ];then
                 pip install --upgrade google-api-python-client
-                pip uninstall google-api-python-client -y
+                # pip uninstall google-api-python-client -y
                 pip install -I google-api-python-client==2.39.0 -i https://pypi.Python.org/simple
             fi
             tmp=$(pip list|grep google-auth-httplib2|awk '{print $2}')
