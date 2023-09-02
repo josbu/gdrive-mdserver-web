@@ -37,12 +37,12 @@ Install_App()
             fi
             tmp=$(pip list|grep google-auth-oauthlib|awk '{print $2}')
             if [ "$tmp" != '0.5.0' ];then
-                pip uninstall google-auth-oauthlib -y
+                # pip uninstall google-auth-oauthlib -y
                 pip install -I google-auth-oauthlib==0.5.0 -i https://pypi.Python.org/simple
             fi
             tmp=$(pip list|grep -E '^httplib2'|awk '{print $2}')
             if [ "$tmp" != '0.18.1' ];then
-                pip uninstall httplib2 -y
+                # pip uninstall httplib2 -y
                 pip install -I httplib2==0.18.1 -i https://pypi.Python.org/simple
             fi
         else
