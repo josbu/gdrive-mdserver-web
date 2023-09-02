@@ -295,7 +295,7 @@ def backupAllFunc(stype):
     if sep > -1:
         for backup in backups:
             fn = os.path.basename(backup['filename'])
-            msodc.delete_file(fn, stype)
+            gd.delete_file(fn, stype)
             mw.echoInfo("---已清理远程过期备份文件：" + fn)
             sep -= 1
             if sep < 0:
